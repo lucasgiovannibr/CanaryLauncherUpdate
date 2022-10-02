@@ -1,0 +1,139 @@
+<Window x:Class="CanaryLauncherUpdate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CanaryLauncherUpdate"
+        mc:Ignorable="d" 
+		Height="400"
+		Width="800"
+		FontFamily="Verdana"
+		Background="#131415"
+		x:Name="home"
+		WindowStyle="None"
+		ResizeMode="NoResize"
+		WindowStartupLocation="CenterScreen"
+		Title="Tibia Launcher"
+		Loaded="TibiaLauncher_Load">
+	<StackPanel>
+		<StackPanel.Background>
+			<ImageBrush ImageSource="Assets/background.jpg" Stretch="UniformToFill" Opacity="0.3"></ImageBrush>
+		</StackPanel.Background>
+		<StackPanel
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			Margin="0, 20, 0, 0">
+			<Image
+			Height="120"
+			Source="Assets/logo.png"
+			Stretch="Uniform"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Top"
+			Visibility="Visible"></Image>
+		</StackPanel>
+		<StackPanel
+			Width="132"
+			Height="85"
+			Margin="0, 20, 0, 0">
+			<StackPanel.Background>
+				<ImageBrush ImageSource="Assets/bg_button_update.png" Stretch="Fill"></ImageBrush>
+			</StackPanel.Background>
+			<StackPanel MouseEnter="buttonPlay_MouseEnter" MouseLeave="buttonPlay_MouseLeave">
+				<Button
+					x:Name="buttonPlay"
+					Width="100"
+					Height="40"
+					Margin="0, 8, 0, 0"	
+					BorderThickness="0"
+					Cursor="Hand"
+					BorderBrush="{x:Null}"
+					Visibility="Visible" Click="buttonPlay_Click" MouseLeave="buttonPlay_MouseLeave" MouseEnter="buttonPlay_MouseEnter">
+					<Button.Background>
+						<ImageBrush ImageSource="Assets/button_play.png"></ImageBrush>
+					</Button.Background>
+					<Button.Content>
+						<Image
+							x:Name="buttonPlayIcon"
+							Source="Assets/icon_play.png"
+							Stretch="Uniform"
+							Height="32"></Image>
+					</Button.Content>
+					<Button.Style>
+						<Style TargetType="{x:Type Button}">
+							<Setter Property="Template">
+								<Setter.Value>
+									<ControlTemplate TargetType="{x:Type Button}">
+										<Border Background="{TemplateBinding Background}">
+											<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+										</Border>
+									</ControlTemplate>
+								</Setter.Value>
+							</Setter>
+							<Style.Triggers>
+								<Trigger Property="IsMouseOver" Value="True"></Trigger>
+							</Style.Triggers>
+						</Style>
+					</Button.Style>
+				</Button>
+				<ProgressBar
+					x:Name="progressbarDownload"
+						Width="100"
+						Height="40"
+						Margin="0, 8, 0, 0"
+						Value="100"
+						Visibility="Collapsed">
+					<ProgressBar.Foreground>
+						<LinearGradientBrush
+								StartPoint="0.5, 1.5"
+								EndPoint="0.5, 0">
+							<GradientStop Color="#dd9323" Offset="0.4" />
+							<GradientStop Color="#6b4711" Offset="0.8" />
+						</LinearGradientBrush>
+					</ProgressBar.Foreground>
+				</ProgressBar>
+				<Label
+						x:Name="labelDownloadPercent"
+						FontFamily="Verdana"
+						FontSize="10"
+						FontWeight="Bold"
+						Foreground="#bfbfbf"
+						HorizontalAlignment="Center"
+						Margin="0, 5, 0, 0"
+					Visibility="Visible">Download progress</Label>
+			</StackPanel>
+		</StackPanel>
+		<StackPanel
+			Width="550"
+			Height="86"
+			VerticalAlignment="Center"
+			HorizontalAlignment="Center"
+			Margin="0, 40, 0, 0">
+			<StackPanel.Background>
+				<ImageBrush ImageSource="Assets/bg_hints.png"></ImageBrush>
+			</StackPanel.Background>
+			<StackPanel>
+				<TextBlock
+					Height="15"
+					Margin="0, 2, 0, 0"
+					VerticalAlignment="Center"
+					HorizontalAlignment="Center"
+					FontFamily="Verdana"
+					FontSize="11"
+					Foreground="#bfbfbf">Canary News</TextBlock>
+				<StackPanel
+					Height="55"
+					Margin="10, 5, 10, 0"></StackPanel>
+			</StackPanel>
+		</StackPanel>
+		<StackPanel>
+			<TextBlock
+				x:Name="labelVersion"
+				HorizontalAlignment="Left"
+				VerticalAlignment="Bottom"
+				Margin="8, 5, 0, 0"
+				FontFamily="Verdana"
+				FontSize="12"
+				Foreground="#747474">version</TextBlock>
+		</StackPanel>
+	</StackPanel>
+</Window>
