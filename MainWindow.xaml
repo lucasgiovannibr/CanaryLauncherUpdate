@@ -99,8 +99,8 @@
 						Foreground="#bfbfbf"
 						HorizontalAlignment="Center"
 						Margin="0, 5, 0, 0"
-					Visibility="Visible">Download progress</Label>
-			</StackPanel>
+					Visibility="Visible" Content="Download"/>
+            </StackPanel>
 		</StackPanel>
 		<StackPanel
 			Width="550"
