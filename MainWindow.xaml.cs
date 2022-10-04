@@ -42,7 +42,6 @@ namespace CanaryLauncherUpdate
 		private void TibiaLauncher_Load(object sender, RoutedEventArgs e)
 		{
 			currentVersion = webClient.DownloadString(urlVersion);
-			labelDownloadPercent.Visibility = Visibility.Collapsed;
 			progressbarDownload.Visibility = Visibility.Collapsed;
 
 			if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient"))
@@ -66,6 +65,8 @@ namespace CanaryLauncherUpdate
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
+					labelDownloadPercent.Content = "Play Game";
+					labelDownloadPercent.Visibility = Visibility.Visible;
 					needUpdate = false;
 				}
 
@@ -73,6 +74,8 @@ namespace CanaryLauncherUpdate
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
+					labelDownloadPercent.Content = "Download";
+					buttonPlay.Visibility = Visibility.Visible;
 					needUpdate = true;
 				}
 			}
@@ -81,6 +84,8 @@ namespace CanaryLauncherUpdate
 				labelVersion.Text = "My: None Server: " + currentVersion;
 				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
 				buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
+				labelDownloadPercent.Content = "Download";
+				buttonPlay.Visibility = Visibility.Visible;
 				needUpdate = true;
 			}
 		}
@@ -131,12 +136,8 @@ namespace CanaryLauncherUpdate
 
 		private void Client_DownloadFileCompleted(object? sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
-			labelDownloadPercent.Visibility = Visibility.Collapsed;
-			progressbarDownload.Visibility = Visibility.Collapsed;
 			buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
 			buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
-			buttonPlay.Visibility = Visibility.Visible;
-			clientDownloaded = true;
 
 			Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient");
 			ZipFile.ExtractToDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/tibia.zip", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient", true);
@@ -144,10 +145,11 @@ namespace CanaryLauncherUpdate
 			progressbarDownload.Value = 100;
 			needUpdate = false;
 			clientDownloaded = true;
+			labelDownloadPercent.Content = "Play Game";
 			buttonPlay.Visibility = Visibility.Visible;
 			progressbarDownload.Visibility = Visibility.Collapsed;
-			labelDownloadPercent.Visibility = Visibility.Collapsed;
-		}
+			labelDownloadPercent.Visibility = Visibility.Visible;
+        }
 
 		private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 		{
