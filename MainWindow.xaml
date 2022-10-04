@@ -42,7 +42,7 @@
 				<Button
 					x:Name="buttonPlay"
 					Width="100"
-					Height="40"
+					Height="42"
 					Margin="0, 8, 0, 0"	
 					BorderThickness="0"
 					Cursor="Hand"

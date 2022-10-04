@@ -43,7 +43,6 @@ namespace CanaryLauncherUpdate
 		{
 			currentVersion = webClient.DownloadString(urlVersion);
 			labelDownloadPercent.Visibility = Visibility.Collapsed;
-			progressbarDownload.Visibility = Visibility.Collapsed;
 
 			if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient"))
 			{
@@ -66,7 +65,9 @@ namespace CanaryLauncherUpdate
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
-					needUpdate = false;
+                    labelDownloadPercent.Content = "Play Game";
+                    labelDownloadPercent.Visibility = Visibility.Visible;
+                    needUpdate = false;
 				}
 
 				if (currentVersion != myVersion)
