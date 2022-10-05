@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CanaryLauncherUpdate"
+		Icon="Assets/launcher_ico.ico"
         mc:Ignorable="d" 
 		Height="400"
 		Width="800"
@@ -12,17 +13,69 @@
 		x:Name="home"
 		WindowStyle="None"
 		ResizeMode="NoResize"
+		WindowState="Normal"
 		WindowStartupLocation="CenterScreen"
 		Title="Tibia Launcher"
 		Loaded="TibiaLauncher_Load">
-	<StackPanel>
-		<StackPanel.Background>
+	<Grid>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+		</Grid.ColumnDefinitions>
+
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<Grid.Background>
 			<ImageBrush ImageSource="Assets/background.jpg" Stretch="UniformToFill" Opacity="0.3"></ImageBrush>
-		</StackPanel.Background>
+		</Grid.Background>
 		<StackPanel
+			Grid.Column="1"
+			HorizontalAlignment="Right"
+			VerticalAlignment="Top"
+			Margin="0"
+			Orientation="Horizontal"
+			FlowDirection="RightToLeft">
+			<Button
+				x:Name="CloseButton"
+				Style="{StaticResource WindowButtonStyle}"
+				Content="{StaticResource close_ico}"
+				Click="CloseButton_Click"
+				Tag="IsCloseButton"
+				Cursor="Hand"/>
+			<Button
+				x:Name="RestoreButton"
+				Margin="5, 0"
+				Click="RestoreButton_Click"
+				Cursor="Hand">
+				<Button.Style>
+					<Style
+						TargetType="{x:Type Button}"
+						BasedOn="{StaticResource WindowButtonStyle}">
+						<Setter Property="Content" Value="{StaticResource maximize_ico}"/>
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
+								<Setter Property="Content" Value="{StaticResource restore_ico}"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+			</Button>
+			<Button
+				x:Name="MinimizeButton"
+				Style="{StaticResource WindowButtonStyle}"
+				Content="{StaticResource minimize_ico}"
+				Click="MinimizeButton_Click"
+				Cursor="Hand"/>
+		</StackPanel>
+		<StackPanel
+			Grid.Row="0"
 			VerticalAlignment="Center"
 			HorizontalAlignment="Center"
-			Margin="0, 20, 0, 0">
+			Margin="0">
 			<Image
 			Height="120"
 			Source="Assets/logo.png"
@@ -32,13 +85,14 @@
 			Visibility="Visible"></Image>
 		</StackPanel>
 		<StackPanel
+			Grid.Row="1"
 			Width="132"
 			Height="85"
-			Margin="0, 20, 0, 0">
+			Margin="0">
 			<StackPanel.Background>
 				<ImageBrush ImageSource="Assets/bg_button_update.png" Stretch="Fill"></ImageBrush>
 			</StackPanel.Background>
-			<StackPanel MouseEnter="buttonPlay_MouseEnter" MouseLeave="buttonPlay_MouseLeave">
+			<StackPanel>
 				<Button
 					x:Name="buttonPlay"
 					Width="100"
@@ -47,10 +101,26 @@
 					BorderThickness="0"
 					Cursor="Hand"
 					BorderBrush="{x:Null}"
-					Visibility="Visible" Click="buttonPlay_Click" MouseLeave="buttonPlay_MouseLeave" MouseEnter="buttonPlay_MouseEnter">
+					Visibility="Visible"
+					Click="buttonPlay_Click"
+					MouseLeave="buttonPlay_MouseLeave"
+					MouseEnter="buttonPlay_MouseEnter">
+
 					<Button.Background>
 						<ImageBrush ImageSource="Assets/button_play.png"></ImageBrush>
 					</Button.Background>
+
+					<Button.ToolTip>
+						<ToolTip>
+							<TextBlock
+								x:Name="buttonPlay_tooltip"
+								Foreground="#404348"
+								FontWeight="Bold"
+								Text="Play Game">
+							</TextBlock>
+						</ToolTip>
+					</Button.ToolTip>
+
 					<Button.Content>
 						<Image
 							x:Name="buttonPlayIcon"
@@ -77,11 +147,11 @@
 				</Button>
 				<ProgressBar
 					x:Name="progressbarDownload"
-						Width="100"
-						Height="40"
-						Margin="0, 8, 0, 0"
-						Value="100"
-						Visibility="Collapsed">
+					Width="100"
+					Height="40"
+					Margin="0, 8, 0, 0"
+					Value="100"
+					Visibility="Collapsed">
 					<ProgressBar.Foreground>
 						<LinearGradientBrush
 								StartPoint="0.5, 1.5"
@@ -92,48 +162,80 @@
 					</ProgressBar.Foreground>
 				</ProgressBar>
 				<Label
-						x:Name="labelDownloadPercent"
-						FontFamily="Verdana"
-						FontSize="10"
-						FontWeight="Bold"
-						Foreground="#bfbfbf"
-						HorizontalAlignment="Center"
-						Margin="0, 5, 0, 0"
-					Visibility="Visible" Content="Download"/>
-            </StackPanel>
+					x:Name="labelDownloadPercent"
+					FontFamily="Verdana"
+					FontSize="10"
+					FontWeight="Bold"
+					Foreground="#bfbfbf"
+					HorizontalAlignment="Center"
+					Margin="0, 5, 0, 0"
+					Visibility="Visible">Download</Label>
+			</StackPanel>
 		</StackPanel>
 		<StackPanel
+			Grid.Row="2"
 			Width="550"
 			Height="86"
 			VerticalAlignment="Center"
-			HorizontalAlignment="Center"
-			Margin="0, 40, 0, 0">
+			HorizontalAlignment="Center">
 			<StackPanel.Background>
-				<ImageBrush ImageSource="Assets/bg_hints.png"></ImageBrush>
+				<ImageBrush ImageSource="Assets/bg_hints.png" Stretch="Uniform" AlignmentY="Top" AlignmentX="Center"></ImageBrush>
 			</StackPanel.Background>
-			<StackPanel>
+
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="18"/>
+					<RowDefinition Height="65"/>
+				</Grid.RowDefinitions>
+
 				<TextBlock
-					Height="15"
-					Margin="0, 2, 0, 0"
+					Grid.Row="0"
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center"
 					FontFamily="Verdana"
 					FontSize="11"
-					Foreground="#bfbfbf">Canary News</TextBlock>
-				<StackPanel
-					Height="55"
-					Margin="10, 5, 10, 0"></StackPanel>
-			</StackPanel>
+					Foreground="#909090">Genesis</TextBlock>
+				<Grid
+					Grid.Row="1"
+					Margin="10, 3, 10, 3">
+
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="65"/>
+						<ColumnDefinition Width="*"/>
+					</Grid.ColumnDefinitions>
+
+					<Image
+						Grid.Column="0"
+						Source="Assets/rh_lore.png"
+						Width="60"
+						Stretch="Uniform"></Image>
+					<TextBlock
+						Grid.Column="1"
+						x:Name="hintsBox"
+						Margin="10, 0, 0, 0"
+						Foreground="#bfbfbf"
+						FontFamily="Verdana"
+						FontSize="10">A new goddess stepped out of the void like a new-born mermaid from her shell.<LineBreak/>
+						The amazed elder gods watched her divine beauty in awed admiration,<LineBreak/>
+						for everything in her was perfect harmony. They agreed to call her Tibiasula.</TextBlock>
+				</Grid>
+
+			</Grid>
 		</StackPanel>
-		<StackPanel>
+		<StackPanel
+			Grid.Row="2"
+			HorizontalAlignment="Left"
+			VerticalAlignment="Bottom">
 			<TextBlock
 				x:Name="labelVersion"
-				HorizontalAlignment="Left"
-				VerticalAlignment="Bottom"
-				Margin="8, 5, 0, 0"
+				Margin="8, 0, 0, 5"
 				FontFamily="Verdana"
 				FontSize="12"
 				Foreground="#747474">version</TextBlock>
 		</StackPanel>
-	</StackPanel>
+	</Grid>
 </Window>

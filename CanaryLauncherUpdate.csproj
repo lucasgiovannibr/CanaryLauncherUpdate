@@ -18,7 +18,9 @@
     <None Remove="Assets\button_update.png" />
     <None Remove="Assets\icon_play.png" />
     <None Remove="Assets\icon_update.png" />
+    <None Remove="Assets\launcher_ico.ico" />
     <None Remove="Assets\logo.png" />
+    <None Remove="Assets\rh_lore.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -49,9 +51,25 @@
     <Content Include="Assets\icon_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\launcher_ico.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\rh_lore.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Assets\icons.xaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Page>
   </ItemGroup>
 
 </Project>
