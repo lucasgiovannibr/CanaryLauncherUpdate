@@ -3,8 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CanaryLauncherUpdate"
-		Icon="Assets/launcher_ico.ico"
+        Icon="Assets/launcher_ico.ico"
         mc:Ignorable="d" 
 		Height="400"
 		Width="800"
@@ -102,9 +101,9 @@
 					Cursor="Hand"
 					BorderBrush="{x:Null}"
 					Visibility="Visible"
-					Click="buttonPlay_Click"
-					MouseLeave="buttonPlay_MouseLeave"
-					MouseEnter="buttonPlay_MouseEnter">
+					Click="ButtonPlay_Click"
+					MouseLeave="ButtonPlay_MouseLeave"
+					MouseEnter="ButtonPlay_MouseEnter">
 
 					<Button.Background>
 						<ImageBrush ImageSource="Assets/button_play.png"></ImageBrush>
