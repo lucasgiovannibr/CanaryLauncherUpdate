@@ -24,9 +24,5 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
 
-    - name: Create and Upload Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: CanaryLauncherUpdate-${{ github.sha }}
-          path: |
-            ${{ github.workspace }}/bin/
+    - name: Publish
+      run: dotnet publish
