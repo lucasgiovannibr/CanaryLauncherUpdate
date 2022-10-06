@@ -30,6 +30,6 @@ jobs:
     - name: Create and Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: CanaryLauncher-${{ github.sha }}
-          path: |
+          name: CanaryLauncher
+          path:
             /home/runner/work/CanaryLauncherUpdate/CanaryLauncherUpdate/bin/Debug/net6.0-windows/publish/
