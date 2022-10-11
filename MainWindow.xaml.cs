@@ -1,34 +1,22 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Threading;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Diagnostics;
-using System.Windows.Threading;
 using Newtonsoft.Json;
-using System.Web;
+using System.Net.Http;
 
 namespace CanaryLauncherUpdate
 {
 
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
 	public partial class MainWindow : Window
 	{
+		HttpClient httpClient = new HttpClient();
 		WebClient webClient = new WebClient();
 
 		bool clientDownloaded = false;
@@ -37,6 +25,7 @@ namespace CanaryLauncherUpdate
 		string urlClient = "https://github.com/lucasgiovannibr/clientlauncherupdate/archive/refs/heads/main.zip";
 		string urlVersion = "https://raw.githubusercontent.com/lucasgiovannibr/clientlauncherupdate/main/version.txt";
 		string currentVersion = "";
+		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
 
 		public MainWindow()
 		{
@@ -45,21 +34,26 @@ namespace CanaryLauncherUpdate
 
 		private void TibiaLauncher_Load(object sender, RoutedEventArgs e)
 		{
-			currentVersion = webClient.DownloadString(urlVersion);
-			progressbarDownload.Visibility = Visibility.Collapsed;
+			ImageLogoServer.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/logo.png"));
+			ImageLogoCompany.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/logo_company.png"));
 
-			if (!Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient"))
+			currentVersion = httpClient.GetStringAsync(urlVersion).Result;
+			progressbarDownload.Visibility = Visibility.Collapsed;
+			labelClientVersion.Visibility = Visibility.Collapsed;
+			labelDownloadPercent.Visibility = Visibility.Collapsed;
+
+			if (!Directory.Exists(path))
 			{
-				Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient");
+				Directory.CreateDirectory(path);
 			}
-			if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main"))
+			if (Directory.Exists(path + "/clientlauncherupdate-main"))
 			{
 				clientDownloaded = true;
 			}
 
-			if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
 			{
-				StreamReader reader = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt");
+				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
@@ -69,8 +63,9 @@ namespace CanaryLauncherUpdate
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
-					labelDownloadPercent.Content = GetClientVersion();
-					labelDownloadPercent.Visibility = Visibility.Visible;
+					labelClientVersion.Content = GetClientVersion(path);
+					labelClientVersion.Visibility = Visibility.Visible;
+					buttonPlay_tooltip.Text = "Play Game";
 					needUpdate = false;
 				}
 
@@ -78,35 +73,35 @@ namespace CanaryLauncherUpdate
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
-					labelDownloadPercent.Content = "Download";
+					labelClientVersion.Content = "Download";
+					labelClientVersion.Visibility = Visibility.Visible;
 					buttonPlay.Visibility = Visibility.Visible;
+					buttonPlay_tooltip.Text = "Update";
 					needUpdate = true;
 				}
 			}
-			if (!File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt"))
+			if (!File.Exists(path + "/clientlauncherupdate-main/version.txt"))
 			{
 				labelVersion.Text = "v" + currentVersion;
 				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
 				buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
-				labelDownloadPercent.Content = "Download";
+				labelClientVersion.Content = "Download";
+				labelClientVersion.Visibility = Visibility.Visible;
 				buttonPlay.Visibility = Visibility.Visible;
+				buttonPlay_tooltip.Text = "Download";
 				needUpdate = true;
 			}
 		}
 
-		static string GetClientVersion()
+		static string GetClientVersion(string path)
 		{
-			string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			string json = path + "/CanaryClient/clientlauncherupdate-main/package.json";
-
-			using (StreamReader stream = new StreamReader(json))
+			string json = path + "/clientlauncherupdate-main/package.json";
+			StreamReader stream = new StreamReader(json);
+			dynamic jsonString = stream.ReadToEnd();
+			dynamic versionclient = JsonConvert.DeserializeObject(jsonString);
+			foreach (string version in versionclient)
 			{
-				string jsonString = stream.ReadToEnd();
-				dynamic versionclient = JsonConvert.DeserializeObject(jsonString);
-				foreach (string version in versionclient)
-				{
-					return version;
-				}
+				return version;
 			}
 			return "Play Game";
 		}
@@ -119,10 +114,11 @@ namespace CanaryLauncherUpdate
 				{
 					labelDownloadPercent.Visibility = Visibility.Visible;
 					progressbarDownload.Visibility = Visibility.Visible;
+					labelClientVersion.Visibility = Visibility.Collapsed;
 					buttonPlay.Visibility = Visibility.Collapsed;
 					webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
 					webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-					webClient.DownloadFileAsync(new Uri(urlClient), Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/tibia.zip");
+					webClient.DownloadFileAsync(new Uri(urlClient), path + "/tibia.zip");
 				}
 				catch (Exception ex)
 				{
@@ -133,7 +129,7 @@ namespace CanaryLauncherUpdate
 			{
 				if (clientDownloaded == true)
 				{
-					Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/bin/" + clientName);
+					Process.Start(path + "/clientlauncherupdate-main/bin/" + clientName);
 					this.Close();
 				}
 				else
@@ -142,10 +138,11 @@ namespace CanaryLauncherUpdate
 					{
 						labelDownloadPercent.Visibility = Visibility.Visible;
 						progressbarDownload.Visibility = Visibility.Visible;
+						labelClientVersion.Visibility = Visibility.Collapsed;
 						buttonPlay.Visibility = Visibility.Collapsed;
 						webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
 						webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-						webClient.DownloadFileAsync(new Uri(urlClient), Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/tibia.zip");
+						webClient.DownloadFileAsync(new Uri(urlClient), path + "/tibia.zip");
 					}
 					catch (Exception ex)
 					{
@@ -160,16 +157,18 @@ namespace CanaryLauncherUpdate
 			buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
 			buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
 
-			Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient");
-			ZipFile.ExtractToDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/tibia.zip", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient", true);
-			File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/tibia.zip");
+			Directory.CreateDirectory(path);
+			ZipFile.ExtractToDirectory(path + "/tibia.zip", path, true);
+			File.Delete(path + "/tibia.zip");
 			progressbarDownload.Value = 100;
 			needUpdate = false;
 			clientDownloaded = true;
-			labelDownloadPercent.Content = "Play Game";
+			labelClientVersion.Content = "Play Game";
+			buttonPlay_tooltip.Text = "Play Game";
+			labelClientVersion.Visibility = Visibility.Visible;
 			buttonPlay.Visibility = Visibility.Visible;
 			progressbarDownload.Visibility = Visibility.Collapsed;
-			labelDownloadPercent.Visibility = Visibility.Visible;
+			labelDownloadPercent.Visibility = Visibility.Collapsed;
 		}
 
 		private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -200,9 +199,9 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseEnter(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
 			{
-				StreamReader reader = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt");
+				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
@@ -223,9 +222,9 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseLeave(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
 			{
-				StreamReader reader = new StreamReader(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/CanaryClient/clientlauncherupdate-main/version.txt");
+				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
@@ -264,5 +263,6 @@ namespace CanaryLauncherUpdate
 		{
 			WindowState = WindowState.Minimized;
 		}
+
 	}
 }

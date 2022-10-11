@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <PackageIcon>launcher_ico.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +21,7 @@
     <None Remove="Assets\icon_update.png" />
     <None Remove="Assets\launcher_ico.ico" />
     <None Remove="Assets\logo.png" />
+    <None Remove="Assets\logo_company.png" />
     <None Remove="Assets\rh_lore.png" />
   </ItemGroup>
 
@@ -54,7 +56,15 @@
     <Content Include="Assets\launcher_ico.ico">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\launcher_ico.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Assets\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\logo_company.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\rh_lore.png">
@@ -64,6 +74,13 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\launcher_ico.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

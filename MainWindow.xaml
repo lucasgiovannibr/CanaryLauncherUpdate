@@ -25,7 +25,7 @@
 
 		<Grid.RowDefinitions>
 			<RowDefinition Height="*"/>
-			<RowDefinition Height="*"/>
+			<RowDefinition Height="100"/>
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
@@ -71,24 +71,25 @@
 				Click="MinimizeButton_Click"
 				Cursor="Hand"/>
 		</StackPanel>
+		
 		<StackPanel
 			Grid.Row="0"
-			VerticalAlignment="Center"
+			VerticalAlignment="Bottom"
 			HorizontalAlignment="Center"
-			Margin="0">
+			Margin="0, 15">
 			<Image
-			Height="120"
-			Source="Assets/logo.png"
-			Stretch="Uniform"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Top"
-			Visibility="Visible"></Image>
+				x:Name="ImageLogoServer"
+				Height="120"
+				Source="Assets/logo.png"
+				Stretch="Uniform"
+				Visibility="Visible"></Image>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="1"
 			Width="132"
 			Height="85"
-			Margin="0">
+			VerticalAlignment="Top"
+			HorizontalAlignment="Center">
 			<StackPanel.Background>
 				<ImageBrush ImageSource="Assets/bg_button_update.png" Stretch="Fill"></ImageBrush>
 			</StackPanel.Background>
@@ -162,21 +163,30 @@
 					</ProgressBar.Foreground>
 				</ProgressBar>
 				<Label
+					x:Name="labelClientVersion"
+					FontFamily="Verdana"
+					FontSize="13"
+					FontWeight="Bold"
+					Foreground="#bfbfbf"
+					HorizontalAlignment="Center"
+					Margin="0, 2, 0, 0"
+					Visibility="Visible">Client Version</Label>
+				<Label
 					x:Name="labelDownloadPercent"
 					FontFamily="Verdana"
 					FontSize="10"
 					FontWeight="Bold"
 					Foreground="#bfbfbf"
 					HorizontalAlignment="Center"
-					Margin="0, 5, 0, 0"
-					Visibility="Visible">Download</Label>
+					Margin="0, 2, 0, 0"
+					Visibility="Collapsed">Download</Label>
 			</StackPanel>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="2"
 			Width="550"
 			Height="86"
-			VerticalAlignment="Center"
+			VerticalAlignment="Top"
 			HorizontalAlignment="Center">
 			<StackPanel.Background>
 				<ImageBrush ImageSource="Assets/bg_hints.png" Stretch="Uniform" AlignmentY="Top" AlignmentX="Center"></ImageBrush>
@@ -197,7 +207,8 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center"
 					FontFamily="Verdana"
-					FontSize="11"
+					FontSize="12"
+					FontWeight="Bold"
 					Foreground="#909090">Genesis</TextBlock>
 				<Grid
 					Grid.Row="1"
@@ -216,26 +227,52 @@
 					<TextBlock
 						Grid.Column="1"
 						x:Name="hintsBox"
-						Margin="10, 0, 0, 0"
+						Margin="5, 0, 0, 0"
 						Foreground="#bfbfbf"
 						FontFamily="Verdana"
-						FontSize="10">A new goddess stepped out of the void like a new-born mermaid from her shell.<LineBreak/>
-						The amazed elder gods watched her divine beauty in awed admiration,<LineBreak/>
-						for everything in her was perfect harmony. They agreed to call her Tibiasula.</TextBlock>
+						FontSize="12">A new goddess stepped out of the void like a new-born mermaid from<LineBreak/> her shell.
+						The amazed elder gods watched her divine beauty in awed<LineBreak/> admiration,
+						for everything in her was perfect harmony. They agreed<LineBreak/> to call her Tibiasula.</TextBlock>
 				</Grid>
 
 			</Grid>
 		</StackPanel>
+		
 		<StackPanel
 			Grid.Row="2"
-			HorizontalAlignment="Left"
 			VerticalAlignment="Bottom">
-			<TextBlock
-				x:Name="labelVersion"
-				Margin="8, 0, 0, 5"
-				FontFamily="Verdana"
-				FontSize="12"
-				Foreground="#747474">version</TextBlock>
+			<Grid>
+				
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+
+				<Grid.RowDefinitions>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+				
+				<TextBlock
+					Grid.Column="0"
+					x:Name="labelVersion"
+					HorizontalAlignment="Left"
+					VerticalAlignment="Bottom"
+					FontFamily="Verdana"
+					FontSize="12"
+					FontWeight="Bold"
+					Foreground="#747474"
+					Margin="10">Version</TextBlock>
+				<Image
+					x:Name="ImageLogoCompany"
+					Grid.Column="1"
+					Source="Assets/logo_company.png"
+					Height="22"
+					Stretch="Uniform"
+					VerticalAlignment="Top"
+					HorizontalAlignment="Center"
+					Margin="0, 0, 0, 20"/>
+			</Grid>
 		</StackPanel>
 	</Grid>
 </Window>
