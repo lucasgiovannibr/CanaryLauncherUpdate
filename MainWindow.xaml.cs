@@ -34,8 +34,8 @@ namespace CanaryLauncherUpdate
 
 		private void TibiaLauncher_Load(object sender, RoutedEventArgs e)
 		{
-			ImageLogoServer.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/logo.png"));
-			ImageLogoCompany.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/logo_company.png"));
+			ImageLogoServer.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/logo.png"));
+			ImageLogoCompany.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/logo_company.png"));
 
 			currentVersion = httpClient.GetStringAsync(urlVersion).Result;
 			progressbarDownload.Visibility = Visibility.Collapsed;
@@ -61,8 +61,8 @@ namespace CanaryLauncherUpdate
 
 				if (currentVersion == myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
-					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
+					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_play.png"));
 					labelClientVersion.Content = GetClientVersion(path);
 					labelClientVersion.Visibility = Visibility.Visible;
 					buttonPlay_tooltip.Text = "Play Game";
@@ -71,8 +71,8 @@ namespace CanaryLauncherUpdate
 
 				if (currentVersion != myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
-					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
+					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_update.png"));
 					labelClientVersion.Content = "Download";
 					labelClientVersion.Visibility = Visibility.Visible;
 					buttonPlay.Visibility = Visibility.Visible;
@@ -83,8 +83,8 @@ namespace CanaryLauncherUpdate
 			if (!File.Exists(path + "/clientlauncherupdate-main/version.txt"))
 			{
 				labelVersion.Text = "v" + currentVersion;
-				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
-				buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_update.png"));
+				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
+				buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_update.png"));
 				labelClientVersion.Content = "Download";
 				labelClientVersion.Visibility = Visibility.Visible;
 				buttonPlay.Visibility = Visibility.Visible;
@@ -154,8 +154,8 @@ namespace CanaryLauncherUpdate
 
 		private void Client_DownloadFileCompleted(object? sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
-			buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
-			buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/icon_play.png"));
+			buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
+			buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_play.png"));
 
 			Directory.CreateDirectory(path);
 			ZipFile.ExtractToDirectory(path + "/tibia.zip", path, true);
@@ -207,16 +207,16 @@ namespace CanaryLauncherUpdate
 
 				if (currentVersion != myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_hover_update.png")));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_hover_update.png")));
 				}
 				if (currentVersion == myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_hover_play.png")));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_hover_play.png")));
 				}
 			}
 			else
 			{
-				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_hover_update.png")));
+				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_hover_update.png")));
 			}
 		}
 
@@ -230,16 +230,16 @@ namespace CanaryLauncherUpdate
 
 				if (currentVersion != myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 				}
 				if (currentVersion == myVersion)
 				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_play.png")));
+					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
 				}
 			}
 			else
 			{
-				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "Assets/button_update.png")));
+				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 			}
 		}
 

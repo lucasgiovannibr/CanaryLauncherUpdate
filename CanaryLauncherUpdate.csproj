@@ -6,7 +6,8 @@
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
-    <PackageIcon>launcher_ico.png</PackageIcon>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+    <AssemblyName>CanaryLauncher</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,50 +27,54 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Assets\background.jpg">
+    <Page Remove="Assets\icons.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\background.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\bg_button_update.png">
+    </Resource>
+    <Resource Include="Assets\bg_button_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\bg_hints.png">
+    </Resource>
+    <Resource Include="Assets\bg_hints.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\button_hover_play.png">
+    </Resource>
+    <Resource Include="Assets\button_hover_play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\button_hover_update.png">
+    </Resource>
+    <Resource Include="Assets\button_hover_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\button_play.png">
+    </Resource>
+    <Resource Include="Assets\button_play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\button_update.png">
+    </Resource>
+    <Resource Include="Assets\button_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\icon_play.png">
+    </Resource>
+    <Resource Include="Assets\icons.xaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\icon_update.png">
+    </Resource>
+    <Resource Include="Assets\icon_play.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\launcher_ico.ico">
+    </Resource>
+    <Resource Include="Assets\icon_update.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\launcher_ico.png">
+    </Resource>
+    <Resource Include="Assets\launcher_ico.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\logo.png">
+    </Resource>
+    <Resource Include="Assets\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\logo_company.png">
+    </Resource>
+    <Resource Include="Assets\logo_company.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Assets\rh_lore.png">
+    </Resource>
+    <Resource Include="Assets\rh_lore.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>
@@ -81,12 +86,6 @@
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Page Update="Assets\icons.xaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Page>
   </ItemGroup>
 
 </Project>
