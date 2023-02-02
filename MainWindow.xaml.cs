@@ -22,8 +22,8 @@ namespace CanaryLauncherUpdate
 		bool clientDownloaded = false;
 		bool needUpdate = false;
 		string clientName = "client.exe";
-		string urlClient = "https://github.com/lucasgiovannibr/clientlauncherupdate/archive/refs/heads/main.zip";
-		string urlVersion = "https://raw.githubusercontent.com/lucasgiovannibr/clientlauncherupdate/main/version.txt";
+		string urlClient = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/client.zip";
+		string urlVersion = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/version.txt";
 		string currentVersion = "";
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
 
@@ -51,13 +51,14 @@ namespace CanaryLauncherUpdate
 				clientDownloaded = true;
 			}
 
-			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/version.txt"))
 			{
-				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
+				// Read actual client version
+				StreamReader reader = new StreamReader(path + "/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
-				labelVersion.Text = "v" + currentVersion;
+				labelVersion.Text = "v" + myVersion;
 
 				if (currentVersion == myVersion)
 				{
@@ -65,22 +66,23 @@ namespace CanaryLauncherUpdate
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_play.png"));
 					labelClientVersion.Content = GetClientVersion(path);
 					labelClientVersion.Visibility = Visibility.Visible;
-					buttonPlay_tooltip.Text = "Play Game";
+					buttonPlay_tooltip.Text = GetClientVersion(path);
 					needUpdate = false;
+					StartClient();
 				}
 
 				if (currentVersion != myVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_update.png"));
-					labelClientVersion.Content = "Download";
+					labelClientVersion.Content = currentVersion;
 					labelClientVersion.Visibility = Visibility.Visible;
 					buttonPlay.Visibility = Visibility.Visible;
 					buttonPlay_tooltip.Text = "Update";
 					needUpdate = true;
 				}
 			}
-			if (!File.Exists(path + "/clientlauncherupdate-main/version.txt"))
+			if (!File.Exists(path + "/version.txt"))
 			{
 				labelVersion.Text = "v" + currentVersion;
 				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
@@ -93,9 +95,15 @@ namespace CanaryLauncherUpdate
 			}
 		}
 
+		private void StartClient()
+		{
+			Process.Start(path + "/bin/" + clientName);
+			this.Close();
+		}
+
 		static string GetClientVersion(string path)
 		{
-			string json = path + "/clientlauncherupdate-main/package.json";
+			string json = path + "/package.json";
 			StreamReader stream = new StreamReader(json);
 			dynamic jsonString = stream.ReadToEnd();
 			dynamic versionclient = JsonConvert.DeserializeObject(jsonString);
@@ -103,7 +111,8 @@ namespace CanaryLauncherUpdate
 			{
 				return version;
 			}
-			return "Play Game";
+
+			return "";
 		}
 
 		private void buttonPlay_Click(object sender, RoutedEventArgs e)
@@ -129,7 +138,7 @@ namespace CanaryLauncherUpdate
 			{
 				if (clientDownloaded == true)
 				{
-					Process.Start(path + "/clientlauncherupdate-main/bin/" + clientName);
+					Process.Start(path + "/bin/" + clientName);
 					this.Close();
 				}
 				else
@@ -160,11 +169,13 @@ namespace CanaryLauncherUpdate
 			Directory.CreateDirectory(path);
 			ZipFile.ExtractToDirectory(path + "/tibia.zip", path, true);
 			File.Delete(path + "/tibia.zip");
+			File.WriteAllText(Path.Combine(path, "version.txt"), GetClientVersion(path));
 			progressbarDownload.Value = 100;
+
 			needUpdate = false;
 			clientDownloaded = true;
-			labelClientVersion.Content = "Play Game";
-			buttonPlay_tooltip.Text = "Play Game";
+			labelClientVersion.Content = GetClientVersion(path);
+			buttonPlay_tooltip.Text = GetClientVersion(path);
 			labelClientVersion.Visibility = Visibility.Visible;
 			buttonPlay.Visibility = Visibility.Visible;
 			progressbarDownload.Visibility = Visibility.Collapsed;
@@ -199,9 +210,9 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseEnter(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/version.txt"))
 			{
-				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
+				StreamReader reader = new StreamReader(path + "/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
@@ -222,9 +233,9 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseLeave(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(path + "/clientlauncherupdate-main/version.txt"))
+			if (File.Exists(path + "/version.txt"))
 			{
-				StreamReader reader = new StreamReader(path + "/clientlauncherupdate-main/version.txt");
+				StreamReader reader = new StreamReader(path + "/version.txt");
 				string? myVersion = reader.ReadLine();
 				reader.Close();
 
