@@ -222,7 +222,7 @@
 					Foreground="#909090">Genesis</TextBlock>
 				<Grid
 					Grid.Row="1"
-					Margin="20, 0, 0, 0">
+					Margin="10, 3, 10, 3">
 
 					<Grid.ColumnDefinitions>
 						<ColumnDefinition Width="65"/>
@@ -237,7 +237,7 @@
 					<TextBlock
 						Grid.Column="1"
 						x:Name="hintsBox"
-						Margin="10, 0, 0, 0"
+						Margin="5, 0, 0, 0"
 						Foreground="#bfbfbf"
 						FontFamily="Verdana"
 						FontSize="12">A new goddess stepped out of the void like a new-born mermaid from<LineBreak/> her shell.
