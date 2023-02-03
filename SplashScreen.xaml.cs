@@ -4,6 +4,16 @@ using System.IO;
 using System.Net;
 using System.Windows.Threading;
 using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.IO.Compression;
+using System.Diagnostics;
+using Newtonsoft.Json;
+using System.Threading.Tasks;
 
 namespace CanaryLauncherUpdate
 {
@@ -11,10 +21,42 @@ namespace CanaryLauncherUpdate
 	{
 		static readonly HttpClient httpClient = new HttpClient();
 		DispatcherTimer timer = new DispatcherTimer();
-		string urlClient = "https://github.com/lucasgiovannibr/clientlauncherupdate/archive/refs/heads/main.zip";
-		string urlVersion = "https://raw.githubusercontent.com/lucasgiovannibr/clientlauncherupdate/main/version.txt";
-		string currentVersion = "";
+		string clientName = "client.exe";
+		string urlClient = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/client.zip";
+		string urlPackage = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/package.json";
+		string newVersion = "";
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
+		
+		// This will pull the version of the "package.json" file from a user-defined url.
+		private async Task<string> GetPackageVersionFromUrl(string url)
+		{
+			using (HttpClient client = new HttpClient())
+			{
+				string json = await client.GetStringAsync(url);
+				var data = JsonConvert.DeserializeObject<dynamic>(json);
+				return data.version.ToString();
+			}
+		}
+
+		static string GetClientVersion(string path)
+		{
+			string json = path + "/package.json";
+			StreamReader stream = new StreamReader(json);
+			dynamic jsonString = stream.ReadToEnd();
+			dynamic versionclient = JsonConvert.DeserializeObject(jsonString);
+			foreach (string version in versionclient)
+			{
+				return version;
+			}
+
+			return "";
+		}
+
+		private void StartClient()
+		{
+			Process.Start(path + "/bin/" + clientName);
+			this.Close();
+		}
 
 		public SplashScreen()
 		{
@@ -26,12 +68,18 @@ namespace CanaryLauncherUpdate
 
 		public async void timer_SplashScreen(object? sender, EventArgs e)
 		{
-			var requestCurrentVersion = new HttpRequestMessage(HttpMethod.Post, urlVersion);
-			var responseCurrentVersion = await httpClient.SendAsync(requestCurrentVersion);
-			currentVersion = await responseCurrentVersion.Content.ReadAsStringAsync();
-			if (currentVersion == null)
+			string newVersion = await GetPackageVersionFromUrl(urlPackage);
+			if (newVersion == null)
 			{
 				this.Close();
+			}
+
+			// Start the client if the versions are the same
+			if (File.Exists(path + "/package.json")) {
+				string actualVersion = GetClientVersion(path);
+				if (newVersion == actualVersion) {
+					StartClient();
+				}
 			}
 
 			var requestClient = new HttpRequestMessage(HttpMethod.Post, urlClient);
