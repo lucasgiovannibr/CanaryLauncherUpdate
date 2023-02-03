@@ -22,9 +22,9 @@ namespace CanaryLauncherUpdate
 
 		bool clientDownloaded = false;
 		bool needUpdate = false;
-		string clientName = "client.exe";
-		string urlClient = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/client.zip";
-		string urlPackage = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/package.json";
+		string clientName = "molten.exe";
+		string urlClient = "https://github.com/gccris/molten_client/releases/download/client-molten/client-to-update.zip";
+		string urlPackage = "https://raw.githubusercontent.com/gccris/molten_client/main/package.json";
 		string newVersion = "";
 		string programVersion = "1.0";
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();

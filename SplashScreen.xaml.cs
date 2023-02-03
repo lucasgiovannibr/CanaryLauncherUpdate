@@ -21,9 +21,9 @@ namespace CanaryLauncherUpdate
 	{
 		static readonly HttpClient httpClient = new HttpClient();
 		DispatcherTimer timer = new DispatcherTimer();
-		string clientName = "client.exe";
-		string urlClient = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/client.zip";
-		string urlPackage = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/package.json";
+		string clientName = "molten.exe";
+		string urlClient = "https://github.com/gccris/molten_client/releases/download/client-molten/client-to-update.zip";
+		string urlPackage = "https://raw.githubusercontent.com/gccris/molten_client/main/package.json";
 		string newVersion = "";
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
 		
@@ -72,6 +72,16 @@ namespace CanaryLauncherUpdate
 			if (newVersion == null)
 			{
 				this.Close();
+			}
+
+			// If the files "eventschedule/boostedcreature" exist, set them as read-only
+			string eventSchedulePath = path + "/cache/eventschedule.json";
+			if (File.Exists(eventSchedulePath)) {
+				File.SetAttributes(eventSchedulePath, FileAttributes.ReadOnly);
+			}
+			string boostedCreaturePath = path + "/cache/boostedcreature.json";
+			if (File.Exists(boostedCreaturePath)) {
+				File.SetAttributes(boostedCreaturePath, FileAttributes.ReadOnly);
 			}
 
 			// Start the client if the versions are the same
