@@ -10,6 +10,7 @@ using System.Net;
 using System.Diagnostics;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace CanaryLauncherUpdate
 {
@@ -23,8 +24,9 @@ namespace CanaryLauncherUpdate
 		bool needUpdate = false;
 		string clientName = "client.exe";
 		string urlClient = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/client.zip";
-		string urlVersion = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/version.txt";
-		string currentVersion = "";
+		string urlPackage = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/package.json";
+		string newVersion = "";
+		string programVersion = "1.0";
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
 
 		public MainWindow()
@@ -32,12 +34,23 @@ namespace CanaryLauncherUpdate
 			InitializeComponent();
 		}
 
-		private void TibiaLauncher_Load(object sender, RoutedEventArgs e)
+		// This will pull the version of the "package.json" file from a user-defined url.
+		private async Task<string> GetPackageVersionFromUrl(string url)
+		{
+			using (HttpClient client = new HttpClient())
+			{
+				string json = await client.GetStringAsync(url);
+				var data = JsonConvert.DeserializeObject<dynamic>(json);
+				return data.version.ToString();
+			}
+		}
+
+		private async void TibiaLauncher_Load(object sender, RoutedEventArgs e)
 		{
 			ImageLogoServer.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/logo.png"));
 			ImageLogoCompany.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/logo_company.png"));
 
-			currentVersion = httpClient.GetStringAsync(urlVersion).Result;
+			newVersion = await GetPackageVersionFromUrl(urlPackage);
 			progressbarDownload.Visibility = Visibility.Collapsed;
 			labelClientVersion.Visibility = Visibility.Collapsed;
 			labelDownloadPercent.Visibility = Visibility.Collapsed;
@@ -46,45 +59,27 @@ namespace CanaryLauncherUpdate
 			{
 				Directory.CreateDirectory(path);
 			}
-			if (Directory.Exists(path + "/clientlauncherupdate-main"))
-			{
-				clientDownloaded = true;
-			}
 
-			if (File.Exists(path + "/version.txt"))
+			if (File.Exists(path + "/package.json"))
 			{
 				// Read actual client version
-				StreamReader reader = new StreamReader(path + "/version.txt");
-				string? myVersion = reader.ReadLine();
-				reader.Close();
+				string actualVersion = GetClientVersion(path);
+				labelVersion.Text = "v" + programVersion;
 
-				labelVersion.Text = "v" + myVersion;
-
-				if (currentVersion == myVersion)
-				{
-					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
-					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_play.png"));
-					labelClientVersion.Content = GetClientVersion(path);
-					labelClientVersion.Visibility = Visibility.Visible;
-					buttonPlay_tooltip.Text = GetClientVersion(path);
-					needUpdate = false;
-					StartClient();
-				}
-
-				if (currentVersion != myVersion)
+				if (newVersion != actualVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 					buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_update.png"));
-					labelClientVersion.Content = currentVersion;
+					labelClientVersion.Content = newVersion;
 					labelClientVersion.Visibility = Visibility.Visible;
 					buttonPlay.Visibility = Visibility.Visible;
 					buttonPlay_tooltip.Text = "Update";
 					needUpdate = true;
 				}
 			}
-			if (!File.Exists(path + "/version.txt"))
+			if (!File.Exists(path + "/package.json"))
 			{
-				labelVersion.Text = "v" + currentVersion;
+				labelVersion.Text = "v" + programVersion;
 				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 				buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_update.png"));
 				labelClientVersion.Content = "Download";
@@ -93,12 +88,6 @@ namespace CanaryLauncherUpdate
 				buttonPlay_tooltip.Text = "Download";
 				needUpdate = true;
 			}
-		}
-
-		private void StartClient()
-		{
-			Process.Start(path + "/bin/" + clientName);
-			this.Close();
 		}
 
 		static string GetClientVersion(string path)
@@ -161,15 +150,18 @@ namespace CanaryLauncherUpdate
 			}
 		}
 
-		private void Client_DownloadFileCompleted(object? sender, System.ComponentModel.AsyncCompletedEventArgs e)
+		private async void Client_DownloadFileCompleted(object? sender, System.ComponentModel.AsyncCompletedEventArgs e)
 		{
 			buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
 			buttonPlayIcon.Source = new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/icon_play.png"));
 
-			Directory.CreateDirectory(path);
-			ZipFile.ExtractToDirectory(path + "/tibia.zip", path, true);
-			File.Delete(path + "/tibia.zip");
-			File.WriteAllText(Path.Combine(path, "version.txt"), GetClientVersion(path));
+			// Adds the task to a secondary task to prevent the program from crashing while this is running
+			await Task.Run(() =>
+			{
+				Directory.CreateDirectory(path);
+				ZipFile.ExtractToDirectory(path + "/tibia.zip", path, true);
+				File.Delete(path + "/tibia.zip");
+			});
 			progressbarDownload.Value = 100;
 
 			needUpdate = false;
@@ -210,17 +202,14 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseEnter(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(path + "/version.txt"))
+			if (File.Exists(path + "/package.json"))
 			{
-				StreamReader reader = new StreamReader(path + "/version.txt");
-				string? myVersion = reader.ReadLine();
-				reader.Close();
-
-				if (currentVersion != myVersion)
+				string actualVersion = GetClientVersion(path);
+				if (newVersion != actualVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_hover_update.png")));
 				}
-				if (currentVersion == myVersion)
+				if (newVersion == actualVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_hover_play.png")));
 				}
@@ -233,17 +222,14 @@ namespace CanaryLauncherUpdate
 
 		private void buttonPlay_MouseLeave(object sender, MouseEventArgs e)
 		{
-			if (File.Exists(path + "/version.txt"))
+			if (File.Exists(path + "/package.json"))
 			{
-				StreamReader reader = new StreamReader(path + "/version.txt");
-				string? myVersion = reader.ReadLine();
-				reader.Close();
-
-				if (currentVersion != myVersion)
+				string actualVersion = GetClientVersion(path);
+				if (newVersion != actualVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
 				}
-				if (currentVersion == myVersion)
+				if (newVersion == actualVersion)
 				{
 					buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_play.png")));
 				}
