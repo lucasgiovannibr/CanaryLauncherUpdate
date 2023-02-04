@@ -28,11 +28,11 @@ namespace CanaryLauncherUpdate
 		string path = AppDomain.CurrentDomain.BaseDirectory.ToString();
 		
 		// This will pull the version of the "package.json" file from a user-defined url.
-		private async Task<string> GetPackageVersionFromUrl(string url)
+		private string GetPackageVersionFromUrl(string url)
 		{
 			using (HttpClient client = new HttpClient())
 			{
-				string json = await client.GetStringAsync(url);
+				string json = client.GetStringAsync(url).Result;
 				var data = JsonConvert.DeserializeObject<dynamic>(json);
 				return data.version.ToString();
 			}
@@ -60,28 +60,10 @@ namespace CanaryLauncherUpdate
 
 		public SplashScreen()
 		{
-			InitializeComponent();
-			timer.Tick += new EventHandler(timer_SplashScreen);
-			timer.Interval = new TimeSpan(0, 0, 5);
-			timer.Start();
-		}
-
-		public async void timer_SplashScreen(object? sender, EventArgs e)
-		{
-			string newVersion = await GetPackageVersionFromUrl(urlPackage);
+			string newVersion = GetPackageVersionFromUrl(urlPackage);
 			if (newVersion == null)
 			{
 				this.Close();
-			}
-
-			// If the files "eventschedule/boostedcreature" exist, set them as read-only
-			string eventSchedulePath = path + "/cache/eventschedule.json";
-			if (File.Exists(eventSchedulePath)) {
-				File.SetAttributes(eventSchedulePath, FileAttributes.ReadOnly);
-			}
-			string boostedCreaturePath = path + "/cache/boostedcreature.json";
-			if (File.Exists(boostedCreaturePath)) {
-				File.SetAttributes(boostedCreaturePath, FileAttributes.ReadOnly);
 			}
 
 			// Start the client if the versions are the same
@@ -90,6 +72,24 @@ namespace CanaryLauncherUpdate
 				if (newVersion == actualVersion) {
 					StartClient();
 				}
+			}
+
+			InitializeComponent();
+			timer.Tick += new EventHandler(timer_SplashScreen);
+			timer.Interval = new TimeSpan(0, 0, 5);
+			timer.Start();
+		}
+
+		public async void timer_SplashScreen(object? sender, EventArgs e)
+		{
+			// If the files "eventschedule/boostedcreature" exist, set them as read-only
+			string eventSchedulePath = path + "/cache/eventschedule.json";
+			if (File.Exists(eventSchedulePath)) {
+				File.SetAttributes(eventSchedulePath, FileAttributes.ReadOnly);
+			}
+			string boostedCreaturePath = path + "/cache/boostedcreature.json";
+			if (File.Exists(boostedCreaturePath)) {
+				File.SetAttributes(boostedCreaturePath, FileAttributes.ReadOnly);
 			}
 
 			var requestClient = new HttpRequestMessage(HttpMethod.Post, urlClient);

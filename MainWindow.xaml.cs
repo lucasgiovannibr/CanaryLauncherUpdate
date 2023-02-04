@@ -177,7 +177,11 @@ namespace CanaryLauncherUpdate
 		private void Client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
 		{
 			progressbarDownload.Value = e.ProgressPercentage;
-			labelDownloadPercent.Content = SizeSuffix(e.BytesReceived) + " / " + SizeSuffix(e.TotalBytesToReceive);
+			if (progressbarDownload.Value == 100) {
+				labelDownloadPercent.Content = "Finishing, wait...";
+			} else {
+				labelDownloadPercent.Content = SizeSuffix(e.BytesReceived) + " / " + SizeSuffix(e.TotalBytesToReceive);
+			}
 		}
 
 		static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
