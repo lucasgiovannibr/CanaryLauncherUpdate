@@ -203,7 +203,8 @@
 					VerticalAlignment="Center"
 					HorizontalAlignment="Center"
 					FontFamily="Verdana"
-					FontSize="11"
+					FontSize="12"
+					FontWeight="Bold"
 					Foreground="#909090">Genesis</TextBlock>
 				<Grid
 					Grid.Row="1"
