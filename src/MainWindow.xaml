@@ -41,7 +41,7 @@
 			<BitmapImage x:Key="RhLoreKey" UriSource="pack://application:,,,/Assets/rh_lore.png"/>
 		</Grid.Resources>
 		<Grid.Background>
-			<ImageBrush ImageSource="{StaticResource BackGroundKey}" Stretch="UniformToFill" Opacity="0.3"></ImageBrush>
+			<ImageBrush ImageSource="{StaticResource BackGroundKey}" Stretch="UniformToFill" Opacity="100"></ImageBrush>
 		</Grid.Background>
 		<StackPanel
 			Grid.Column="1"
@@ -57,24 +57,6 @@
 				Click="CloseButton_Click"
 				Tag="IsCloseButton"
 				Cursor="Hand"/>
-			<Button
-				x:Name="RestoreButton"
-				Margin="5, 0"
-				Click="RestoreButton_Click"
-				Cursor="Hand">
-				<Button.Style>
-					<Style
-						TargetType="{x:Type Button}"
-						BasedOn="{StaticResource WindowButtonStyle}">
-						<Setter Property="Content" Value="{StaticResource maximize_ico}"/>
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
-								<Setter Property="Content" Value="{StaticResource restore_ico}"/>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>
-			</Button>
 			<Button
 				x:Name="MinimizeButton"
 				Style="{StaticResource WindowButtonStyle}"
@@ -93,7 +75,10 @@
 				Height="120"
 				Source="{StaticResource LogoKey}"
 				Stretch="Uniform"
-				Visibility="Visible"></Image>
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Visibility="Visible">
+			</Image>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="1"
