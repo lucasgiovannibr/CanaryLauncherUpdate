@@ -14,7 +14,7 @@
 		Title="Loading Launcher" Height="400" Width="800">
 	<Grid>
 		<Image
-			Height="150"
+			Height="300"
 			Source="pack://application:,,,/Assets/logo.png"
 			Stretch="Uniform"
 			HorizontalAlignment="Center"

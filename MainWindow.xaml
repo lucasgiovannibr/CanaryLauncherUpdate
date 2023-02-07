@@ -41,7 +41,7 @@
 			<BitmapImage x:Key="RhLoreKey" UriSource="pack://application:,,,/Assets/rh_lore.png"/>
 		</Grid.Resources>
 		<Grid.Background>
-			<ImageBrush ImageSource="{StaticResource BackGroundKey}" Stretch="UniformToFill" Opacity="0.3"></ImageBrush>
+			<ImageBrush ImageSource="{StaticResource BackGroundKey}" Stretch="UniformToFill" Opacity="100"></ImageBrush>
 		</Grid.Background>
 		<StackPanel
 			Grid.Column="1"
@@ -87,13 +87,16 @@
 			Grid.Row="0"
 			VerticalAlignment="Bottom"
 			HorizontalAlignment="Center"
-			Margin="0, 15">
+			Margin="0, 0, 45, -50">
 			<Image
 				x:Name="ImageLogoServer"
-				Height="120"
+				Height="200"
 				Source="{StaticResource LogoKey}"
 				Stretch="Uniform"
-				Visibility="Visible"></Image>
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Visibility="Visible">
+			</Image>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="1"
