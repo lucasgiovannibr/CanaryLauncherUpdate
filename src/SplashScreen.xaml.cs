@@ -18,7 +18,7 @@ namespace CanaryLauncherUpdate
 {
 	public partial class SplashScreen : Window
 	{
-		static string launcerConfigUrl = "https://github.com/dudantas/CanaryLauncherUpdate/releases/download/download-files/launcher_config.json";
+		static string launcerConfigUrl = "https://raw.githubusercontent.com/dudantas/CanaryLauncherUpdate/improve-change-images-to-static/launcher_config.json";
 		// Load informations of launcher_config.json file
 		static ClientConfig clientConfig = ClientConfig.loadFromFile(launcerConfigUrl);
 		
