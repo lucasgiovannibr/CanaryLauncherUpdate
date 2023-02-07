@@ -82,11 +82,6 @@ namespace CanaryLauncherUpdate
 			labelClientVersion.Visibility = Visibility.Collapsed;
 			labelDownloadPercent.Visibility = Visibility.Collapsed;
 
-			if (!Directory.Exists(GetLauncherPath()))
-			{
-				Directory.CreateDirectory(GetLauncherPath());
-			}
-
 			if (File.Exists(GetLauncherPath(true) + "/launcher_config.json"))
 			{
 				// Read actual client version
@@ -104,7 +99,7 @@ namespace CanaryLauncherUpdate
 					needUpdate = true;
 				}
 			}
-			if (!File.Exists(GetLauncherPath(true) + "/launcher_config.json"))
+			if (!File.Exists(GetLauncherPath(true) + "/launcher_config.json") || Directory.Exists(GetLauncherPath()) && Directory.GetFiles(GetLauncherPath()).Length == 0 && Directory.GetDirectories(GetLauncherPath()).Length == 0)
 			{
 				labelVersion.Text = "v" + programVersion;
 				buttonPlay.Background = new ImageBrush(new BitmapImage(new Uri(BaseUriHelper.GetBaseUri(this), "pack://application:,,,/Assets/button_update.png")));
@@ -131,9 +126,26 @@ namespace CanaryLauncherUpdate
 			return "";
 		}
 
-		private void buttonPlay_Click(object sender, RoutedEventArgs e)
+		private void addReadOnly()
 		{
-			// If the files "eventschedule/boostedcreature" exist, remove read-only from this
+			// If the files "eventschedule/boostedcreature/onlinenumbers" exist, set them as read-only
+			string eventSchedulePath = GetLauncherPath() + "/cache/eventschedule.json";
+			if (File.Exists(eventSchedulePath)) {
+				File.SetAttributes(eventSchedulePath, FileAttributes.ReadOnly);
+			}
+			string boostedCreaturePath = GetLauncherPath() + "/cache/boostedcreature.json";
+			if (File.Exists(boostedCreaturePath)) {
+				File.SetAttributes(boostedCreaturePath, FileAttributes.ReadOnly);
+			}
+			string onlineNumbersPath = GetLauncherPath() + "/cache/onlinenumbers.json";
+			if (File.Exists(onlineNumbersPath)) {
+				File.SetAttributes(onlineNumbersPath, FileAttributes.ReadOnly);
+			}
+		}
+
+		private void removeReadOnly()
+		{
+			// If the files "eventschedule/boostedcreature/onlinenumbers" exist, remove read-only from this
 			string eventSchedulePath = GetLauncherPath() + "/cache/eventschedule.json";
 			if (File.Exists(eventSchedulePath)) {
 				File.SetAttributes(eventSchedulePath, FileAttributes.Normal);
@@ -142,17 +154,35 @@ namespace CanaryLauncherUpdate
 			if (File.Exists(boostedCreaturePath)) {
 				File.SetAttributes(boostedCreaturePath, FileAttributes.Normal);
 			}
-			if (needUpdate == true)
+			string onlineNumbersPath = GetLauncherPath() + "/cache/onlinenumbers.json";
+			if (File.Exists(onlineNumbersPath)) {
+				File.SetAttributes(onlineNumbersPath, FileAttributes.Normal);
+			}
+		}
+
+		private void updateClient()
+		{
+			removeReadOnly();
+			if (!Directory.Exists(GetLauncherPath(true)))
+			{
+				Directory.CreateDirectory(GetLauncherPath());
+			}
+			labelDownloadPercent.Visibility = Visibility.Visible;
+			progressbarDownload.Visibility = Visibility.Visible;
+			labelClientVersion.Visibility = Visibility.Collapsed;
+			buttonPlay.Visibility = Visibility.Collapsed;
+			webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
+			webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
+			webClient.DownloadFileAsync(new Uri(urlClient), GetLauncherPath() + "/tibia.zip");
+		}
+
+		private void buttonPlay_Click(object sender, RoutedEventArgs e)
+		{
+			if (needUpdate == true || !Directory.Exists(GetLauncherPath()))
 			{
 				try
 				{
-					labelDownloadPercent.Visibility = Visibility.Visible;
-					progressbarDownload.Visibility = Visibility.Visible;
-					labelClientVersion.Visibility = Visibility.Collapsed;
-					buttonPlay.Visibility = Visibility.Collapsed;
-					webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
-					webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-					webClient.DownloadFileAsync(new Uri(urlClient), GetLauncherPath() + "/tibia.zip");
+					updateClient();
 				}
 				catch (Exception ex)
 				{
@@ -161,7 +191,7 @@ namespace CanaryLauncherUpdate
 			}
 			else
 			{
-				if (clientDownloaded == true)
+				if (clientDownloaded == true || !Directory.Exists(GetLauncherPath(true)))
 				{
 					Process.Start(GetLauncherPath() + "/bin/" + clientExecutableName);
 					this.Close();
@@ -170,13 +200,7 @@ namespace CanaryLauncherUpdate
 				{
 					try
 					{
-						labelDownloadPercent.Visibility = Visibility.Visible;
-						progressbarDownload.Visibility = Visibility.Visible;
-						labelClientVersion.Visibility = Visibility.Collapsed;
-						buttonPlay.Visibility = Visibility.Collapsed;
-						webClient.DownloadProgressChanged += Client_DownloadProgressChanged;
-						webClient.DownloadFileCompleted += Client_DownloadFileCompleted;
-						webClient.DownloadFileAsync(new Uri(urlClient), GetLauncherPath() + "/tibia.zip");
+						updateClient();
 					}
 					catch (Exception ex)
 					{
@@ -217,15 +241,7 @@ namespace CanaryLauncherUpdate
 			string localPath = Path.Combine(GetLauncherPath(true), "launcher_config.json");
 			webClient.DownloadFile(launcerConfigUrl, localPath);
 
-			// If the files "eventschedule/boostedcreature" exist, set them as read-only
-			string eventSchedulePath = GetLauncherPath() + "/cache/eventschedule.json";
-			if (File.Exists(eventSchedulePath)) {
-				File.SetAttributes(eventSchedulePath, FileAttributes.ReadOnly);
-			}
-			string boostedCreaturePath = GetLauncherPath() + "/cache/boostedcreature.json";
-			if (File.Exists(boostedCreaturePath)) {
-				File.SetAttributes(boostedCreaturePath, FileAttributes.ReadOnly);
-			}
+			addReadOnly();
 
 			CreateShortcut();
 

@@ -58,8 +58,10 @@ namespace CanaryLauncherUpdate
 
 		private void StartClient()
 		{
-			Process.Start(GetLauncherPath() + "/bin/" + clientExecutableName);
-			this.Close();
+			if (File.Exists(GetLauncherPath() + "/bin/" + clientExecutableName)) {
+				Process.Start(GetLauncherPath() + "/bin/" + clientExecutableName);
+				this.Close();
+			}
 		}
 
 		public SplashScreen()
@@ -73,7 +75,7 @@ namespace CanaryLauncherUpdate
 			// Start the client if the versions are the same
 			if (File.Exists(GetLauncherPath(true) + "/launcher_config.json")) {
 				string actualVersion = GetClientVersion(GetLauncherPath(true));
-				if (newVersion == actualVersion) {
+				if (newVersion == actualVersion && Directory.Exists(GetLauncherPath()) ) {
 					StartClient();
 				}
 			}
