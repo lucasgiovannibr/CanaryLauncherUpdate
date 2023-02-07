@@ -7,7 +7,7 @@
 
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ResourceDictionary Source="Assets/icons.xaml"/>
+				<ResourceDictionary Source="pack://application:,,,/Assets/icons.xaml"/>
 			</ResourceDictionary.MergedDictionaries>
 
 			<Style

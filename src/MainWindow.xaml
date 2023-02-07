@@ -1,11 +1,12 @@
 <Window x:Class="CanaryLauncherUpdate.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CanaryLauncherUpdate"
-		Icon="Assets/launcher_ico.ico"
-        mc:Ignorable="d" 
+		xmlns:system="clr-namespace:System;assembly=mscorlib"
+		xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:local="clr-namespace:CanaryLauncherUpdate"
+		Icon="pack://application:,,,/Assets/launcher_ico.png"
+		mc:Ignorable="d" 
 		Height="400"
 		Width="800"
 		FontFamily="Verdana"
@@ -29,8 +30,18 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
+		<Grid.Resources>
+			<BitmapImage x:Key="BackGroundKey" UriSource="pack://application:,,,/Assets/background.jpg"/>
+			<BitmapImage x:Key="LogoKey" UriSource="pack://application:,,,/Assets/logo.png"/>
+			<BitmapImage x:Key="LogoCompanyKey" UriSource="pack://application:,,,/Assets/logo_company.png"/>
+			<BitmapImage x:Key="BGButtonUpdateKey" UriSource="pack://application:,,,/Assets/bg_button_update.png"/>
+			<BitmapImage x:Key="ButtonPlayKey" UriSource="pack://application:,,,/Assets/button_play.png"/>
+			<BitmapImage x:Key="IconPlayKey" UriSource="pack://application:,,,/Assets/icon_play.png"/>
+			<BitmapImage x:Key="BgHintsKey" UriSource="pack://application:,,,/Assets/bg_hints.png"/>
+			<BitmapImage x:Key="RhLoreKey" UriSource="pack://application:,,,/Assets/rh_lore.png"/>
+		</Grid.Resources>
 		<Grid.Background>
-			<ImageBrush ImageSource="Assets/background.jpg" Stretch="UniformToFill" Opacity="0.3"></ImageBrush>
+			<ImageBrush ImageSource="{StaticResource BackGroundKey}" Stretch="UniformToFill" Opacity="100"></ImageBrush>
 		</Grid.Background>
 		<StackPanel
 			Grid.Column="1"
@@ -47,31 +58,13 @@
 				Tag="IsCloseButton"
 				Cursor="Hand"/>
 			<Button
-				x:Name="RestoreButton"
-				Margin="5, 0"
-				Click="RestoreButton_Click"
-				Cursor="Hand">
-				<Button.Style>
-					<Style
-						TargetType="{x:Type Button}"
-						BasedOn="{StaticResource WindowButtonStyle}">
-						<Setter Property="Content" Value="{StaticResource maximize_ico}"/>
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding ElementName=home, Path=WindowState}" Value="Maximized">
-								<Setter Property="Content" Value="{StaticResource restore_ico}"/>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</Button.Style>
-			</Button>
-			<Button
 				x:Name="MinimizeButton"
 				Style="{StaticResource WindowButtonStyle}"
 				Content="{StaticResource minimize_ico}"
 				Click="MinimizeButton_Click"
 				Cursor="Hand"/>
 		</StackPanel>
-		
+
 		<StackPanel
 			Grid.Row="0"
 			VerticalAlignment="Bottom"
@@ -80,9 +73,12 @@
 			<Image
 				x:Name="ImageLogoServer"
 				Height="120"
-				Source="Assets/logo.png"
+				Source="{StaticResource LogoKey}"
 				Stretch="Uniform"
-				Visibility="Visible"></Image>
+				HorizontalAlignment="Center"
+				VerticalAlignment="Center"
+				Visibility="Visible">
+			</Image>
 		</StackPanel>
 		<StackPanel
 			Grid.Row="1"
@@ -91,7 +87,7 @@
 			VerticalAlignment="Top"
 			HorizontalAlignment="Center">
 			<StackPanel.Background>
-				<ImageBrush ImageSource="Assets/bg_button_update.png" Stretch="Fill"></ImageBrush>
+				<ImageBrush ImageSource="{StaticResource BGButtonUpdateKey}" Stretch="Fill"></ImageBrush>
 			</StackPanel.Background>
 			<StackPanel>
 				<Button
@@ -108,7 +104,7 @@
 					MouseEnter="buttonPlay_MouseEnter">
 
 					<Button.Background>
-						<ImageBrush ImageSource="Assets/button_play.png"></ImageBrush>
+						<ImageBrush ImageSource="{StaticResource ButtonPlayKey}"></ImageBrush>
 					</Button.Background>
 
 					<Button.ToolTip>
@@ -125,7 +121,7 @@
 					<Button.Content>
 						<Image
 							x:Name="buttonPlayIcon"
-							Source="Assets/icon_play.png"
+							Source="{StaticResource IconPlayKey}"
 							Stretch="Uniform"
 							Height="32"></Image>
 					</Button.Content>
@@ -189,7 +185,7 @@
 			VerticalAlignment="Top"
 			HorizontalAlignment="Center">
 			<StackPanel.Background>
-				<ImageBrush ImageSource="Assets/bg_hints.png" Stretch="Uniform" AlignmentY="Top" AlignmentX="Center"></ImageBrush>
+				<ImageBrush ImageSource="{StaticResource BgHintsKey}" Stretch="Uniform" AlignmentY="Top" AlignmentX="Center"></ImageBrush>
 			</StackPanel.Background>
 
 			<Grid>
@@ -221,7 +217,7 @@
 
 					<Image
 						Grid.Column="0"
-						Source="Assets/rh_lore.png"
+						Source="{StaticResource RhLoreKey}"
 						Width="60"
 						Stretch="Uniform"></Image>
 					<TextBlock
@@ -266,7 +262,7 @@
 				<Image
 					x:Name="ImageLogoCompany"
 					Grid.Column="1"
-					Source="Assets/logo_company.png"
+					Source="{StaticResource LogoCompanyKey}"
 					Height="22"
 					Stretch="Uniform"
 					VerticalAlignment="Top"
